@@ -125,7 +125,8 @@ public class StreamList extends JFrame implements ActionListener {
         while(true) {
             Thread.sleep(threeMinutes);
             try {
-                updateGUI(parser);
+                Parser updateParser = new Parser();
+                updateGUI(updateParser);
             } catch (FileNotFoundException ex) {Logger.getLogger(StreamList.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IOException ex) {Logger.getLogger(StreamList.class.getName()).log(Level.SEVERE, null, ex);}
         }
