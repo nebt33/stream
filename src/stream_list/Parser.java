@@ -85,7 +85,13 @@ public class Parser {
     private static void readInSavedStreamers() throws IOException {
         String line;
         while((line = reader.readLine()) != null) {
-            archiveList.add(line);
+            boolean check = false;
+            for(String name : archiveList) {
+                if(name.equalsIgnoreCase(line)) 
+                    check = true;
+            }
+            if(check == false)
+              archiveList.add(line);
         }
     }
     

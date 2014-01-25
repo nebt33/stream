@@ -6,6 +6,8 @@ package stream_list;
 
 import java.awt.Color;
 import java.awt.Desktop;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -48,7 +50,7 @@ public class InternalStreamerFrames extends JInternalFrame implements MouseListe
         InternalFrameUI internal = getUI();
         ((BasicInternalFrameUI)internal).setNorthPane(null);
         
-        setSize(289, 70);
+        setSize(295, 50);
         setTitle(streamerName);
         
         //puts streamer's name in frame

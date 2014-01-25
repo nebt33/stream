@@ -19,6 +19,7 @@ public class StreamList extends JFrame implements ActionListener {
     
     static private StreamList tw = new StreamList();
     static private JDesktopPane pane = new JDesktopPane();
+    static private boolean isActive = false;
                 
     public StreamList() {
         super("Stream List");
@@ -29,6 +30,7 @@ public class StreamList extends JFrame implements ActionListener {
         setBounds((int) screenSize.getWidth() - 300, 0, 300, (int)screenSize.getHeight());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
  
+        System.out.println("screensize height: " + (int)screenSize.getHeight());
         //Make frame have title bar and borders
         //getRootPane().setWindowDecorationStyle(JRootPane.FRAME);
         
@@ -125,8 +127,10 @@ public class StreamList extends JFrame implements ActionListener {
         while(true) {
             Thread.sleep(threeMinutes);
             try {
-                Parser updateParser = new Parser();
-                updateGUI(updateParser);
+                //if(isActive == false) {
+                    Parser updateParser = new Parser();
+                    updateGUI(updateParser);
+                //}
             } catch (FileNotFoundException ex) {Logger.getLogger(StreamList.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IOException ex) {Logger.getLogger(StreamList.class.getName()).log(Level.SEVERE, null, ex);}
         }
@@ -159,15 +163,20 @@ public class StreamList extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(e.getActionCommand().equals("Add Stream")) 
+        if(e.getActionCommand().equals("Add Stream")) {
             new AddStreams();
-        /*else if(e.getActionCommand().equals("Remove Stream")) {
+            /*for(int i = 0; i < 200000; i++)
+              System.out.println("Test");
+            while(true)
+              System.out.println(addStream.isActive());*/
+        }
+        else if(e.getActionCommand().equals("Remove Stream")) {
             try {
                 new RemoveStreams();
             } 
             catch (FileNotFoundException ex) {Logger.getLogger(StreamList.class.getName()).log(Level.SEVERE, null, ex);}
             catch (IOException ex) {Logger.getLogger(StreamList.class.getName()).log(Level.SEVERE, null, ex);}
-        }*/
+        }
         else if(e.getActionCommand().equals("Exit")) {
             dispose();
             System.exit(0);
@@ -180,10 +189,14 @@ public class StreamList extends JFrame implements ActionListener {
      * @param streamerFrame 
      */
     public static void addInternalToList(InternalStreamerFrames streamerFrame) {
-        streamerFrame.setLocation(0, pane.getAllFrames().length*(int)streamerFrame.getHeight());
-        pane.add(streamerFrame);
-        tw.setContentPane(pane);
-        tw.repaint();
+        System.out.println(streamerFrame.getContentPane().getBackground());
+        int opaque = 255;
+        if(streamerFrame.getContentPane().getBackground().getGreen() == opaque) {
+            streamerFrame.setLocation(0, pane.getAllFrames().length*(int)streamerFrame.getHeight());
+            pane.add(streamerFrame);
+            tw.setContentPane(pane);
+            tw.repaint();
+        }
     }
     
     /**
@@ -209,12 +222,5 @@ public class StreamList extends JFrame implements ActionListener {
         
         tw.setContentPane(pane);
         tw.repaint();
-    }
-    
-    /**
-     * Refresh the desktop pane so that the gui's are lined up correctly.
-     */
-    public static void refresh() {
-        
     }
 }

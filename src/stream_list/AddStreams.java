@@ -15,6 +15,7 @@ import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
@@ -81,30 +82,41 @@ public class AddStreams extends StreamList {
     public void actionPerformed(ActionEvent e) {
         //button listener to add streams to txt file
         if(e.getActionCommand().equals("Add")) {
-            BufferedWriter writer = null;
-            try {
-                writer = new BufferedWriter(new FileWriter("stream_archive.txt", true));
-                System.out.println(nameStreamer.getText());
-                writer.write(nameStreamer.getText());
-                
-                //add new streamer to data structure instead of reading in all streamers when program starts every time
-                Parser.addNewStreamer(nameStreamer.getText());
-                
-                //add new streamer's internal frame to streamList
-                String URL = "http://www.leagueoflegendsstreams.com/home/showstream?a=" + nameStreamer.getText();
-                InternalStreamerFrames streamerFrame = new InternalStreamerFrames(nameStreamer.getText(), false, URL);
-                StreamList.addInternalToList(streamerFrame);
-                
-                nameStreamer.setText("Name of Streamer");
-                writer.newLine();
-
-                writer.flush();
-                writer.close();
-            } catch (IOException ex) {Logger.getLogger(AddStreams.class.getName()).log(Level.SEVERE, null, ex);}
+            //check if there is a streamer already by that name
+            if(checkDuplicateStreamer(nameStreamer.getText()) == false) {
+                BufferedWriter writer = null;
+                try {
+                    writer = new BufferedWriter(new FileWriter("stream_archive.txt", true));
+                    System.out.println(nameStreamer.getText());
+                    writer.write(nameStreamer.getText());
+                    
+                    //add new streamer to data structure instead of reading in all streamers when program starts every time
+                    Parser.addNewStreamer(nameStreamer.getText());
+                    
+                    //add new streamer's internal frame to streamList
+                    String URL = "http://www.leagueoflegendsstreams.com/home/showstream?a=" + nameStreamer.getText();
+                    InternalStreamerFrames streamerFrame = new InternalStreamerFrames(nameStreamer.getText(), false, URL);
+                    StreamList.addInternalToList(streamerFrame);
+                    
+                    nameStreamer.setText("Name of Streamer");
+                    writer.newLine();
+                    
+                    writer.flush();
+                    writer.close();
+                } catch (IOException ex) {Logger.getLogger(AddStreams.class.getName()).log(Level.SEVERE, null, ex);}
+            }
+            else 
+                JOptionPane.showMessageDialog(rootPane, "There is a streamer by that name already.");
         }
-        else if(e.getActionCommand().equals("Cancel")) {
+        else if(e.getActionCommand().equals("Cancel")) 
             dispose();
-        }
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    public boolean checkDuplicateStreamer(String name) {
+         for(String streamer : Parser.getArchiveList()) {
+             if(streamer.equalsIgnoreCase(name))
+                 return true;
+         }
+         return false;
     }
 }
